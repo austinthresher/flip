@@ -37,7 +37,7 @@ if !exists('g:flip_map_keys')
 endif
 
 function! s:EchoSpace()
-    if has('patch1913')
+    if has('patch1913') || has('nvim')
         return v:echospace
     endif
     return g:flip_default_width
