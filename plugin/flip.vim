@@ -55,7 +55,11 @@ function! g:Flip_ShowInfo()
     let l:found_current = v:false
     for buf in l:bufs
         let l:name = l:buf['name']
-        let l:items = split(l:name, '/')
+        if has("win32") || has("win64")
+            let l:items = split(l:name, '\')
+        else
+            let l:items = split(l:name, '/')
+        endif
         if len(l:items) > 0
             let l:name = l:items[len(l:items) - 1]
         endif
