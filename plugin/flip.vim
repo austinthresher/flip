@@ -65,6 +65,9 @@ function! g:Flip_ShowInfo()
         if buf['changed']
             let l:name = '+' . l:name
         endif
+        if getbufvar(l:name, '&readonly')
+            let l:name = l:name . ' (RO)'
+        endif
         if len(l:name) > l:chars
             let l:name = l:name[:(l:chars-2)].'..'
         endif
