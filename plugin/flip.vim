@@ -101,9 +101,24 @@ function! g:Flip_ShowInfo()
     echo join(l:names, '')[:s:EchoSpace()-1]
 endfunction
 
+" Prevent flip from hiding terminal windows
+function! g:Flip_Prev()
+    if &buftype !=# 'terminal'
+        silent exec 'bprev'
+        call Flip_ShowInfo()
+    endif
+endfunc
+
+function! g:Flip_Next()
+    if &buftype !=# 'terminal'
+        silent exec 'bnext'
+        call Flip_ShowInfo()
+    endif
+endfunc
+
 if g:flip_map_keys
-    nmap <silent> <c-k> :bprev<cr>:call Flip_ShowInfo()<cr>
-    nmap <silent> <c-j> :bnext<cr>:call Flip_ShowInfo()<cr>
+    nmap <silent> <c-k> :call Flip_Prev()<cr>
+    nmap <silent> <c-j> :call Flip_Next()<cr>
     augroup BufSwitch
         autocmd!
         autocmd BufEnter * call Flip_ShowInfo()
