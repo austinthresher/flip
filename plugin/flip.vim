@@ -45,6 +45,10 @@ endfunction
 
 " Easy buffer switching and display
 function! g:Flip_ShowInfo()
+    if bufname() =~ '^term://'
+        " Fixes a bug with nvim terminal cursor display
+        return
+    endif
     let l:names = []
     let l:bufs = getbufinfo({'buflisted':1})
     " Without this, we get the Press Enter prompt
@@ -105,7 +109,9 @@ endfunction
 function! g:Flip_Prev()
     if &buftype !=# 'terminal'
         silent exec 'bprev'
-        call Flip_ShowInfo()
+        if &buftype !=# 'terminal'
+            call Flip_ShowInfo()
+        endif
     endif
 endfunc
 
