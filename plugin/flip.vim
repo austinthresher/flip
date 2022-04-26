@@ -36,6 +36,14 @@ if !exists('g:flip_map_keys')
     let g:flip_map_keys = v:true
 endif
 
+if !exists('g:flip_left_char')
+    let g:flip_left_char = '['
+endif
+
+if !exists('g:flip_right_char')
+    let g:flip_right_char = ']'
+endif
+
 function! s:EchoSpace()
     if has('patch1913') || has('nvim')
         return v:echospace
@@ -59,7 +67,12 @@ function! g:Flip_ShowInfo()
     let l:found_current = v:false
     for buf in l:bufs
         let l:name = l:buf['name']
-        if has("win32") || has("win64")
+        " This used to check using has('win32'), but the slash used is
+        " inconsistent depending on the shell being used. This isn't
+        " perfect but seems to give decent results
+        let l:bslash = count(l:name, '\')
+        let l:fslash = count(l:name, '/')
+        if l:bslash > l:fslash 
             let l:items = split(l:name, '\')
         else
             let l:items = split(l:name, '/')
@@ -79,7 +92,7 @@ function! g:Flip_ShowInfo()
             let l:name = l:name[:(l:chars-2)].'..'
         endif
         if buf['bufnr'] == bufnr('%')
-            let l:name = '['.l:name.']'
+            let l:name = g:flip_left_char.l:name.g:flip_right_char
             let l:found_current = v:true
         else
             let l:name = ' '.l:name.' '
