@@ -88,25 +88,27 @@ function! g:Flip_ShowInfo()
         if buf['changed']
             let l:name = '+' . l:name
         endif
-        if len(l:name) > l:chars
-            let l:name = l:name[:(l:chars-2)].'..'
+        if strchars(l:name) > l:chars
+            let l:name = strcharpart(l:name, 0, l:chars-2).'..'
         endif
         if buf['bufnr'] == bufnr('%')
-            let l:name = g:flip_left_char.l:name.g:flip_right_char
+            let l:name = g:flip_left_char . l:name . g:flip_right_char
             let l:found_current = v:true
         else
-            let l:name = ' '.l:name.' '
+            let l:l_rep = strchars(g:flip_left_char)
+            let l:r_rep = strchars(g:flip_right_char)
+            let l:name = repeat(' ', l:l_rep) . l:name . repeat(' ', l:r_rep)
         endif
-        let l:name = printf('%-'.string(l:chars).'s', l:name)
         let l:names = l:names + [l:name]
-        if l:found_current && len(join(l:names, '')) >= s:EchoSpace() | break | endif
+        if l:found_current && strchars(join(l:names, '')) >= s:EchoSpace() | break | endif
     endfor
+    let l:l_chars = strchars(g:flip_left_char)
     let l:done = v:false
     while done == v:false
         let l:count = 0
         for val in l:names
-            if l:val[0] == '[' | break | endif
-            let l:count = l:count + len(l:val)
+            if strcharpart(l:val, 0, l:l_chars) ==# g:flip_left_char | break | endif
+            let l:count = l:count + strchars(l:val)
         endfor
         if l:count > s:EchoSpace()
             let l:names = l:names[1:]
